@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { userModel } from '../Dao/models/user.model.js'
+import passport from 'passport'
 
 const registerRouter = Router()
 
@@ -25,8 +26,29 @@ registerRouter.get('/:id', async (req, res) => {
     }
 })
 
-registerRouter.post('/', async (req, res) => {
-    const { nombre, apellido, edad, email, password } = req.body
+registerRouter.post('/',passport.authenticate('register'), async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(400).send({ mensaje: 'Usuario ya existente' })
+        }
+
+        
+        req.session.user = {
+            first_name: req.user.first_name,
+            last_name: req.user.last_name,
+            age: req.user.age,
+            email: req.user.email,
+            rol:req.user.rol
+        }
+        
+        res.redirect('/api/products',200,req.session.user)
+    } catch (error) {
+        res.status(500).send({ mensaje: `Error al registrar usuario ${error}` })
+    }
+})
+  
+  
+  /*  const { nombre, apellido, edad, email, password } = req.body
     try {
         const existe = await userModel.find({email})
         if(existe[0]) res.status(404).send({ respuesta: 'El email ya fue registrado' })
@@ -37,7 +59,7 @@ registerRouter.post('/', async (req, res) => {
     } catch (error) {
         res.status(400).send({ respuesta: 'Error en crear usuario', mensaje: error })
     }
-})
+}) */
 
 registerRouter.put('/:id', async (req, res) => {
     const { id } = req.params

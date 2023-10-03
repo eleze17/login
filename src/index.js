@@ -13,7 +13,8 @@ import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
 import { messageModel } from './Dao/models/mesagges.model.js'
 import 'dotenv/config'
-
+import passport from 'passport'
+import initializePassport from './config/passport.js'
 
 const app = express()
 const PORT = 4000
@@ -35,11 +36,13 @@ app.use(session({
     saveUninitialized: false // Fuerzo a guardar la session a pesar de no tener ningun dato
 }))
 
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
+
 
 const Serverexp = app.listen(PORT, () => {
-
-console.log(PORT)
-console.log(PORT)
 
     console.log(`Server on Port ${PORT}`)
 })

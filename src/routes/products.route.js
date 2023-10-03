@@ -67,7 +67,7 @@ let prods
  
 let admin
  
-if (req.session.login.rol === 'admin'){
+if (req.session.user.rol === 'admin'){
      admin = true
 }else {admin = false}
 
@@ -77,7 +77,7 @@ res.render('products', {
   title:'Productos',
   css: '/product.css',
   js: '/product.js',
-  usuario: req.session.login || '',
+  usuario: req.session.user || '',
   admin
 })
 
