@@ -46,6 +46,11 @@ registerRouter.post('/',passport.authenticate('register'), async (req, res) => {
         res.status(500).send({ mensaje: `Error al registrar usuario ${error}` })
     }
 })
+
+registerRouter.get('/jwt', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log(req)
+    res.send(req.user)
+})
   
   
   /*  const { nombre, apellido, edad, email, password } = req.body

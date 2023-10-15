@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import passport from 'passport'
-
+import {generateToken} from '../jwt.js'
 const loginRouter = Router()
 
 loginRouter.get('/', (req, res) => {
@@ -24,6 +24,12 @@ loginRouter.post('/', passport.authenticate('login') ,async (req, res) => {
             email: req.user.email,
             rol:req.user.rol
         }
+        const token = generateToken(req.session.user)
+        res.cookie('jwtCookie', token, {
+            maxAge: 43200000 // 12hs en ms
+        })
+
+
         res.redirect('/api/products',200,req.session.user)}
       
         catch (error) {

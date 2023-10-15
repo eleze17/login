@@ -1,13 +1,39 @@
 import local from 'passport-local' // Importo la estrategia
 import passport from 'passport'
 import GithubStrategy from 'passport-github2'
+import jwt from 'passport-jwt'
 import { createHash, validatePassword } from '../utils.js'
 import { userModel } from '../Dao/models/user.model.js'
 
+
 // Defino la estregia a utilizar
 const LocalStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt // Extrar de las cookies el token
+
 
 const initializePassport = () => {
+
+    const cookieExtractor = req => {
+
+        console.log(req)
+        const token = (req.cookies.jwtCookie) ? req.cookies.jwtCookie : {}
+        console.log('cookieExtractor', token)
+        return token
+    }
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]), // El token va a venir desde cookieExtractor
+        secretOrKey: process.env.JWT_SECRET
+    }, async (jwtPayload, done) => { // jwt_payload = info del token (en este caso, datos del cliente)
+        try {
+            console.log('JWT', jwtPayload)
+            return done(null, jwtPayload)
+        } catch (error) {
+            return done(error)
+        }
+
+    }))
 
     passport.use('register', new LocalStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {

@@ -2,6 +2,9 @@ import { Router } from 'express'
 // import { ProductManager, Product } from '../Dao/fs/coder.js'
 import {productModel} from '../Dao/models/products.model.js'
 import validaLogin from '../middlewares/login.middleware.js'
+import { passportError, authorization } from '../messageserror.js'
+
+
 // const manejador = new ProductManager('../desafio_mongo/src/productos.json')
 
 /*
@@ -100,7 +103,7 @@ rutaProduct.get('/:pid', async (req, res) => {
  
 })
 
-rutaProduct.post('/', async (req, res) => {
+rutaProduct.post('/',passportError('jwt'), authorization('Admin'), async (req, res) => {
   try {
     const { title, description, price , code, stock,  category } = req.body
     //   const producPost = new Product(title, description, price, code, stock,  category)
