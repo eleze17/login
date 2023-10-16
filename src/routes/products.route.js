@@ -103,7 +103,7 @@ rutaProduct.get('/:pid', async (req, res) => {
  
 })
 
-rutaProduct.post('/',passportError('jwt'), authorization('Admin'), async (req, res) => {
+rutaProduct.post('/',passportError('jwt'), authorization('admin'), async (req, res) => {
   try {
     const { title, description, price , code, stock,  category } = req.body
     //   const producPost = new Product(title, description, price, code, stock,  category)

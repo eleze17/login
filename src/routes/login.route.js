@@ -11,7 +11,7 @@ loginRouter.get('/', (req, res) => {
     })    
 })
 
-loginRouter.post('/', passport.authenticate('login') ,async (req, res) => {
+loginRouter.post('/', passport.authenticate('login' , { session: false }),async (req, res) => {
     try {
         if (!req.user) {
             return res.status(401).send({ mensaje: 'Usuario invalido' })

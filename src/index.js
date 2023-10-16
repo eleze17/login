@@ -15,11 +15,13 @@ import { messageModel } from './Dao/models/mesagges.model.js'
 import 'dotenv/config'
 import passport from 'passport'
 import initializePassport from './config/passport.js'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 const PORT = 4000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser(process.env.SIGNED_COOKIE)) // La cookie esta firmada
 app.use(session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URL, 
